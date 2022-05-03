@@ -1,10 +1,13 @@
 {
-  "name": "mordovia-arena-back",
+  "name": "cloud-tech",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "start:d": "docker-compose down --volumes & docker build . -t cloud-tech & docker-compose up",
+    "build:d": "docker build . -t cloud-tech",
+    "docker": "docker-compose down && docker-compose up"
   },
   "author": "",
   "license": "ISC",
@@ -15,11 +18,13 @@
     "debug": "4.3.4",
     "dotenv": "16.0.0",
     "express": "4.17.3",
+    "express-validator": "6.14.0",
     "joi": "17.6.0",
     "jsonwebtoken": "8.5.1",
     "keyv": "4.1.1",
     "morgan": "1.10.0",
-    "mysql2": "2.3.3",
+    "pg": "8.7.3",
+    "pg-hstore": "2.3.4",
     "sequelize": "6.17.0"
   }
 }

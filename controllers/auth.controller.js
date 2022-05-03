@@ -9,9 +9,9 @@ const jwtConfig = require('../config/jwt');
 
 exports.register = async (req, res) => {
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
+  await User.sync();
 
   const user = await User.create({
-    email: req.body.email,
     first_name: req.body.first_name,
     last_name: req.body.last_name,
     password: hashedPassword,
@@ -23,11 +23,14 @@ exports.register = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
+  await User.sync();
+
   const user = await User.findOne({
     where: {
       username: req.body.username
     }
   });
+
   if (user) {
     const isMatched = await bcrypt.compare(req.body.password, user.password);
     if (isMatched) {
@@ -44,6 +47,8 @@ exports.login = async (req, res) => {
 }
 
 exports.getUser = async (req, res) => {
+  await User.sync();
+
   const user = await User.findByPk(req.user.id);
   return res.json(user);
 }

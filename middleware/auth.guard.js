@@ -20,7 +20,7 @@ module.exports = async (req, res, next) => {
       req.user = decoded;
       req.token = token;
       next();
-    } catch (error) { 
+    } catch (error) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
   } else {
