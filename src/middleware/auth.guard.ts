@@ -1,8 +1,13 @@
-const jwt = require('../utils/jwt');
-const cache = require('../utils/cache');
+import {Request, Response, NextFunction} from 'express';
+import {jwt, cache} from '../utils';
 
-module.exports = async (req, res, next) => {
+export const authMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   let token = req.headers.authorization;
+
   if (token && token.startsWith('Bearer ')) {
     token = token.slice(7, token.length);
   }
@@ -10,20 +15,24 @@ module.exports = async (req, res, next) => {
   if (token) {
     try {
       token = token.trim();
-      /* ---------------------- Check For Blacklisted Tokens ---------------------- */
+
       const isBlackListed = await cache.get(token);
+
       if (isBlackListed) {
-        return res.status(401).json({ error: 'Unauthorized' });
+        return res.status(401).json({error: 'Unauthorized'});
       }
 
       const decoded = await jwt.verifyToken(token);
+
+      // @ts-ignore
       req.user = decoded;
       req.token = token;
+
       next();
     } catch (error) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      return res.status(401).json({error: 'Unauthorized'});
     }
   } else {
-    return res.status(400).json({ error: 'Authorization header is missing.' })
+    return res.status(400).json({error: 'Authorization header is missing.'});
   }
-}
+};

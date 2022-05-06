@@ -1,14 +1,16 @@
 FROM node:18
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
+COPY tsconfig.json ./
+COPY dist /app
+
+RUN ls -a
+
 RUN npm install
 
 RUN git clone https://github.com/vishnubob/wait-for-it.git
 
-# Bundle app source
-COPY . .
-
 EXPOSE 8080
-CMD [ "node", "app.js" ]
+CMD [ "node", "./dist/index.js" ]

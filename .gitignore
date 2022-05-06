@@ -1,9 +1,8 @@
 node_modules
-
-.env
-.env.*
-
-yarn.lock
-package-lock.json
-
+dist
 pgdata
+
+*.lock
+*-lock.json
+local.*
+*.log*
