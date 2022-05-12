@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
-import {Request, Response, NextFunction} from 'express';
 
 import {USER_MODEL} from '../models';
 import {jwt, cache, emitMessage} from '../utils';
 import {JWT_CONFIG} from '../configs';
 import {ROLE_ADMIN, ROLE_USER, ROLE_SECURITY} from '../constants';
+import { IRequest, IResponse, INext } from '../interfaces/vendors';
 
 export class AuthController {
-  static async register(req: Request, res: Response, next: NextFunction) {
+  static async register(req: IRequest, res: IResponse, next: INext) {
     await USER_MODEL.sync();
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -28,7 +28,7 @@ export class AuthController {
     return res.status(200).json(newUser);
   }
 
-  static async login(req: Request, res: Response, next: NextFunction) {
+  static async login(req: IRequest, res: IResponse, next: INext) {
     await USER_MODEL.sync();
 
     const user = await USER_MODEL.findOne({
@@ -54,7 +54,7 @@ export class AuthController {
     return res.status(401).json({error: 'Unauthorized'});
   }
 
-  static async changePassword(req: Request, res: Response, next: NextFunction) {
+  static async changePassword(req: IRequest, res: IResponse, next: INext) {
     await USER_MODEL.sync();
 
     const user = await USER_MODEL.findOne({
@@ -85,7 +85,7 @@ export class AuthController {
     return res.status(401).json({error: 'Unauthorized'});
   }
 
-  static async getUser(req: Request, res: Response, next: NextFunction) {
+  static async getUser(req: IRequest, res: IResponse, next: INext) {
     await USER_MODEL.sync();
 
     const user = await USER_MODEL.findByPk(req.user.id);
@@ -93,7 +93,7 @@ export class AuthController {
     return res.status(200).json(user);
   }
 
-  static async getUsers(req: Request, res: Response, next: NextFunction) {
+  static async getUsers(req: IRequest, res: IResponse, next: INext) {
     await USER_MODEL.sync();
 
     const users = await USER_MODEL.findAll();
@@ -101,7 +101,7 @@ export class AuthController {
     return res.status(200).json(users);
   }
 
-  static async logout(req: Request, res: Response, next: NextFunction) {
+  static async logout(req: IRequest, res: IResponse, next: INext) {
     const token = req.token;
     const now = new Date();
     const expire = new Date(req.user.exp || '');

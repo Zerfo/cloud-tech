@@ -1,10 +1,10 @@
-import {Request, Response, NextFunction} from 'express';
+import { IRequest, IResponse, INext } from '../interfaces/vendors';
 import {jwt, cache} from '../utils';
 
 export const authMiddleware = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
+  req: IRequest,
+  res: IResponse,
+  next: INext,
 ) => {
   let token = req.headers.authorization;
 
