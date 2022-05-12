@@ -1,0 +1,85 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "env": {
+    "es6": true,
+    "node": true
+  },
+  "plugins": ["@typescript-eslint", "jsx-a11y", "prettier"],
+  "extends": [
+    "airbnb-base",
+    "plugin:prettier/recommended",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": 2020,
+    "ecmaFeatures": {
+      "legacyDecorators": true
+    }
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts"]
+    },
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".ts"]
+      }
+    }
+  },
+  "rules": {
+    "default-param-last": 0,
+    "no-alert": 0,
+    "no-case-declarations": 0,
+    "no-console": 1,
+    "no-param-reassign": 0,
+    "no-plusplus": 0,
+    "no-undef": 0,
+    "no-unused-expressions": 0,
+    "no-useless-concat": 0,
+    "no-useless-escape": 0,
+    "no-nested-ternary": 0,
+    "no-restricted-globals": 0,
+    "no-shadow": 0,
+    "no-use-before-define": 0,
+    "linebreak-style": ["error", "windows"],
+
+    "arrow-body-style": [2, "as-needed"],
+    "arrow-parens": ["error", "always"],
+    "camelcase": 0,
+    "class-methods-use-this": 0,
+    "comma-dangle": ["error", "only-multiline"],
+    "consistent-return": 0,
+    "func-names": 0,
+    "function-paren-newline": 0,
+    "indent": 0,
+    "max-len": 0,
+    "object-curly-newline": 0,
+
+    "@typescript-eslint/ban-ts-comment": 0,
+    "@typescript-eslint/ban-ts-ignore": 0,
+    "@typescript-eslint/ban-types": 0,
+    "@typescript-eslint/no-shadow": ["error", { "allow": ["children"] }],
+    "@typescript-eslint/no-use-before-define": ["error"],
+
+    "import/extensions": 0,
+    "import/prefer-default-export": 0,
+    "import/order": [
+      "error",
+      {
+        "newlines-between": "always-and-inside-groups",
+        "groups": ["external", "internal", "parent", "sibling", "index"]
+      }
+    ],
+
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
+  }
+}

@@ -6,7 +6,7 @@ import {
   InferCreationAttributes,
 } from 'sequelize';
 
-import {connection} from './connection';
+import { connection } from './connection';
 
 export interface ReqCar extends Model<InferAttributes<ReqCar>, InferCreationAttributes<ReqCar>> {
   id: CreationOptional<number>;
@@ -31,27 +31,27 @@ export const REQ_CAR_MODEL = connection.define<ReqCar>('req_car', {
   },
   car_number: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
   },
   date_end: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: false,
   },
-  date_req:{
+  date_req: {
     type: DataTypes.DATEONLY,
     allowNull: false,
-    defaultValue: DataTypes.NOW
+    defaultValue: DataTypes.NOW,
   },
-  date_start:{
+  date_start: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: false,
   },
   description: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   fio: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: false,
   },
   is_approved: {
     type: DataTypes.BOOLEAN,
@@ -61,7 +61,7 @@ export const REQ_CAR_MODEL = connection.define<ReqCar>('req_car', {
   passengers: {
     type: DataTypes.ARRAY(DataTypes.STRING),
     allowNull: true,
-    defaultValue: []
+    defaultValue: [],
   },
   wo_wcreening: {
     type: DataTypes.BOOLEAN,

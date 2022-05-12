@@ -6,9 +6,10 @@ import {
   InferCreationAttributes,
 } from 'sequelize';
 
-import {connection} from './connection';
+import { connection } from './connection';
 
-export interface ReqPeople extends Model<InferAttributes<ReqPeople>, InferCreationAttributes<ReqPeople>> {
+export interface ReqPeople
+  extends Model<InferAttributes<ReqPeople>, InferCreationAttributes<ReqPeople>> {
   id: CreationOptional<number>;
   date_end: Date;
   date_req: Date;
@@ -27,27 +28,27 @@ export const REQ_PEOPLE_MODEL = connection.define<ReqPeople>('req_people', {
   },
   date_end: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: false,
   },
-  date_req:{
+  date_req: {
     type: DataTypes.DATEONLY,
     allowNull: false,
-    defaultValue: DataTypes.NOW
+    defaultValue: DataTypes.NOW,
   },
-  date_start:{
+  date_start: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: false,
   },
   description: {
-    type: DataTypes.TEXT
+    type: DataTypes.TEXT,
   },
   fio: {
     type: DataTypes.TEXT,
-    allowNull: false
+    allowNull: false,
   },
   is_approved: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false,
-  }
+  },
 });

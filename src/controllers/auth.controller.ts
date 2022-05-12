@@ -1,13 +1,13 @@
 import bcrypt from 'bcrypt';
 
-import {USER_MODEL} from '../models';
-import {jwt, cache, emitMessage} from '../utils';
-import {JWT_CONFIG} from '../configs';
-import {ROLE_ADMIN, ROLE_USER, ROLE_SECURITY} from '../constants';
-import { IRequest, IResponse, INext } from '../interfaces/vendors';
+import { USER_MODEL } from '../models';
+import { jwt, cache, emitMessage } from '../utils';
+import { JWT_CONFIG } from '../configs';
+import { ROLE_ADMIN } from '../constants';
+import { IRequest, IResponse } from '../interfaces/vendors';
 
 export class AuthController {
-  static async register(req: IRequest, res: IResponse, next: INext) {
+  static async register(req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -20,7 +20,7 @@ export class AuthController {
       username: req.body.username,
     });
 
-    let newUser = Object.assign({}, user);
+    const newUser = { ...user };
     delete newUser.password;
 
     emitMessage([ROLE_ADMIN], 'new-user', newUser);
@@ -28,7 +28,7 @@ export class AuthController {
     return res.status(200).json(newUser);
   }
 
-  static async login(req: IRequest, res: IResponse, next: INext) {
+  static async login(req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
     const user = await USER_MODEL.findOne({
@@ -41,7 +41,7 @@ export class AuthController {
       const isMatched = await bcrypt.compare(req.body.password, user.password);
 
       if (isMatched) {
-        const token = await jwt.createToken({id: user.id, role: user.role});
+        const token = await jwt.createToken({ id: user.id, role: user.role });
 
         return res.status(200).json({
           access_token: token,
@@ -51,10 +51,10 @@ export class AuthController {
       }
     }
 
-    return res.status(401).json({error: 'Unauthorized'});
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  static async changePassword(req: IRequest, res: IResponse, next: INext) {
+  static async changePassword(req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
     const user = await USER_MODEL.findOne({
@@ -68,10 +68,10 @@ export class AuthController {
 
       if (isMatched) {
         const hashedPassword = await bcrypt.hash(req.body.new_password, 10);
-        const token = await jwt.createToken({id: user.id, role: user.role});
+        const token = await jwt.createToken({ id: user.id, role: user.role });
 
         user.update({
-          password: hashedPassword
+          password: hashedPassword,
         });
 
         return res.status(200).json({
@@ -82,10 +82,10 @@ export class AuthController {
       }
     }
 
-    return res.status(401).json({error: 'Unauthorized'});
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  static async getUser(req: IRequest, res: IResponse, next: INext) {
+  static async getUser(req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
     const user = await USER_MODEL.findByPk(req.user.id);
@@ -93,7 +93,7 @@ export class AuthController {
     return res.status(200).json(user);
   }
 
-  static async getUsers(req: IRequest, res: IResponse, next: INext) {
+  static async getUsers(req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
     const users = await USER_MODEL.findAll();
@@ -101,14 +101,14 @@ export class AuthController {
     return res.status(200).json(users);
   }
 
-  static async logout(req: IRequest, res: IResponse, next: INext) {
-    const token = req.token;
+  static async logout(req: IRequest, res: IResponse) {
+    const { token } = req;
     const now = new Date();
     const expire = new Date(req.user.exp || '');
     const milliseconds = now.getTime() - expire.getTime();
 
     await cache.set(token, token, milliseconds);
 
-    return res.status(200).json({message: 'Logged out successfully'});
+    return res.status(200).json({ message: 'Logged out successfully' });
   }
 }

@@ -1,5 +1,6 @@
-import {Sequelize} from 'sequelize';
-import {DB_CONFIG} from '../configs';
+import { Sequelize } from 'sequelize';
+
+import { DB_CONFIG } from '../configs';
 
 export const connection = new Sequelize(
   DB_CONFIG.database,
@@ -11,7 +12,7 @@ export const connection = new Sequelize(
     dialect: 'postgres',
     logging: false,
     define: {
-      timestamps: false
+      timestamps: false,
     },
     pool: {
       acquire: 30000,

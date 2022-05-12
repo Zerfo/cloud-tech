@@ -1,8 +1,11 @@
-import {createServer} from "http";
-import {Server} from "socket.io";
+import { Server } from 'socket.io';
+
 import express from 'express';
 
+import { createServer } from 'http';
+
 export const app = express();
+
 export const httpServer = createServer(app);
 
 export const socket = new Server(httpServer);

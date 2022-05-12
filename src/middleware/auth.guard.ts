@@ -1,11 +1,7 @@
 import { IRequest, IResponse, INext } from '../interfaces/vendors';
-import {jwt, cache} from '../utils';
+import { jwt, cache } from '../utils';
 
-export const authMiddleware = async (
-  req: IRequest,
-  res: IResponse,
-  next: INext,
-) => {
+export const authMiddleware = async (req: IRequest, res: IResponse, next: INext) => {
   let token = req.headers.authorization;
 
   if (token && token.startsWith('Bearer ')) {
@@ -19,7 +15,7 @@ export const authMiddleware = async (
       const isBlackListed = await cache.get(token);
 
       if (isBlackListed) {
-        return res.status(401).json({error: 'Unauthorized'});
+        return res.status(401).json({ error: 'Unauthorized' });
       }
 
       const decoded = await jwt.verifyToken(token);
@@ -30,9 +26,9 @@ export const authMiddleware = async (
 
       next();
     } catch (error) {
-      return res.status(401).json({error: 'Unauthorized'});
+      return res.status(401).json({ error: 'Unauthorized' });
     }
   } else {
-    return res.status(400).json({error: 'Authorization header is missing.'});
+    return res.status(400).json({ error: 'Authorization header is missing.' });
   }
 };

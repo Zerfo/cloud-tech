@@ -1,11 +1,11 @@
-import {Request, Response, NextFunction} from 'express';
-import {JwtPayload} from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
+import { JwtPayload } from 'jsonwebtoken';
 
 export interface IRequest extends Request {
   token: string;
   user: JwtPayload;
 }
 
-export interface IResponse extends Response {}
+export type IResponse = Response;
 
-export interface INext extends NextFunction {}
+export type INext = NextFunction;
