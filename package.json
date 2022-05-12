@@ -8,7 +8,7 @@
     "lint": "npx prettier --check . & npx eslint",
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "build": "npx tsc -p .",
+    "build": "npx tsc -p . & md dist\\uploads & xcopy .\\src\\uploads .\\dist\\uploads /y",
     "build:d": "npm run build & rmdir /s /q pgdata & docker build . -t back/cloud-tech-ts",
     "compouse:up": "docker-compose up",
     "compouse:down": "docker-compose down --volumes",
