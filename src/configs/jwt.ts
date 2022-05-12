@@ -6,5 +6,5 @@
  */
 export const JWT_CONFIG = {
   secret: process.env.JWT_SECRET || '',
-  ttl: 3600,
+  ttl: '2w',
 };

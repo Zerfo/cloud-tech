@@ -1,10 +1,10 @@
-/* eslint-disable require-jsdoc */
 import bcrypt from 'bcrypt';
 import {Request, Response, NextFunction} from 'express';
 
 import {USER_MODEL} from '../models';
-import {jwt, cache} from '../utils';
+import {jwt, cache, emitMessage} from '../utils';
 import {JWT_CONFIG} from '../configs';
+import {ROLE_ADMIN, ROLE_USER, ROLE_SECURITY} from '../constants';
 
 export class AuthController {
   static async register(req: Request, res: Response, next: NextFunction) {
@@ -20,7 +20,12 @@ export class AuthController {
       username: req.body.username,
     });
 
-    return res.json(user);
+    let newUser = Object.assign({}, user);
+    delete newUser.password;
+
+    emitMessage([ROLE_ADMIN], 'new-user', newUser);
+
+    return res.status(200).json(newUser);
   }
 
   static async login(req: Request, res: Response, next: NextFunction) {
@@ -38,7 +43,38 @@ export class AuthController {
       if (isMatched) {
         const token = await jwt.createToken({id: user.id, role: user.role});
 
-        return res.json({
+        return res.status(200).json({
+          access_token: token,
+          token_type: 'Bearer',
+          expires_in: JWT_CONFIG.ttl,
+        });
+      }
+    }
+
+    return res.status(401).json({error: 'Unauthorized'});
+  }
+
+  static async changePassword(req: Request, res: Response, next: NextFunction) {
+    await USER_MODEL.sync();
+
+    const user = await USER_MODEL.findOne({
+      where: {
+        username: req.body.username,
+      },
+    });
+
+    if (user) {
+      const isMatched = await bcrypt.compare(req.body.old_password, user.password);
+
+      if (isMatched) {
+        const hashedPassword = await bcrypt.hash(req.body.new_password, 10);
+        const token = await jwt.createToken({id: user.id, role: user.role});
+
+        user.update({
+          password: hashedPassword
+        });
+
+        return res.status(200).json({
           access_token: token,
           token_type: 'Bearer',
           expires_in: JWT_CONFIG.ttl,
@@ -54,7 +90,7 @@ export class AuthController {
 
     const user = await USER_MODEL.findByPk(req.user.id);
 
-    return res.json(user);
+    return res.status(200).json(user);
   }
 
   static async getUsers(req: Request, res: Response, next: NextFunction) {
@@ -62,7 +98,7 @@ export class AuthController {
 
     const users = await USER_MODEL.findAll();
 
-    return res.json(users);
+    return res.status(200).json(users);
   }
 
   static async logout(req: Request, res: Response, next: NextFunction) {
@@ -73,6 +109,6 @@ export class AuthController {
 
     await cache.set(token, token, milliseconds);
 
-    return res.json({message: 'Logged out successfully'});
+    return res.status(200).json({message: 'Logged out successfully'});
   }
 }

@@ -6,5 +6,3 @@
 # production
 /build
 /dist
-
-.eslintrc.json

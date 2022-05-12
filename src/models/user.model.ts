@@ -7,16 +7,21 @@ import {
 } from 'sequelize';
 
 import {connection} from './connection';
-
 import {REQ_PEOPLE_MODEL} from './req_people.model';
 import {REQ_CAR_MODEL} from './req_car.model';
+
+export enum EUserRoles {
+  ROLE_ADMIN = 'ADMIN',
+  ROLE_USER = 'USER',
+  ROLE_SECURITY = 'SECURITY',
+}
 
 export interface User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   id: CreationOptional<number>;
   username: string;
   first_name: string;
   last_name: string;
-  role: string;
+  role: EUserRoles;
   password: string;
 }
 
@@ -43,6 +48,7 @@ export const USER_MODEL = connection.define<User>('user', {
   role: {
     type: DataTypes.TEXT,
     allowNull: false,
+    defaultValue: EUserRoles.ROLE_USER,
   },
   password: {
     type: DataTypes.TEXT,

@@ -4,14 +4,15 @@ import dotenv from 'dotenv';
 import express from 'express';
 import path from 'path';
 
-import {corsOptionsDelegate} from './utils';
-import {USER_MODEL, REQ_PEOPLE_MODEL, REQ_CAR_MODEL, connection} from './models';
+import {corsOptionsDelegate, app, httpServer} from './utils';
+import {connection} from './models';
+import {SERVER_CONFIG} from './configs';
 import router from './routes';
 
 dotenv.config();
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const APP_PORT = SERVER_CONFIG.APP_PORT;
+const SOCKET_PORT = SERVER_CONFIG.SOCKET_PORT;
 
 app.use(cors(corsOptionsDelegate));
 app.use(express.json());
@@ -29,6 +30,7 @@ try {
   console.error('Unable to connect to the database:', err);
 }
 
-app.listen(PORT, () => {
-  console.log(`Running on port ${PORT}`);
+app.listen(APP_PORT, () => {
+  console.log(`Running on port ${APP_PORT}`);
 });
+httpServer.listen(SOCKET_PORT);
