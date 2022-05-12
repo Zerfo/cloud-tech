@@ -7,7 +7,7 @@ import { ROLE_ADMIN } from '../constants';
 import { IRequest, IResponse } from '../interfaces/vendors';
 
 export class AuthController {
-  static async register(req: IRequest, res: IResponse) {
+  static async register(role: string, req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -23,7 +23,7 @@ export class AuthController {
     const newUser = { ...user };
     delete newUser.password;
 
-    emitMessage([ROLE_ADMIN], 'new-user', newUser);
+    emitMessage([ROLE_ADMIN], null, 'new-user', newUser);
 
     return res.status(200).json(newUser);
   }
@@ -88,12 +88,12 @@ export class AuthController {
   static async getUser(req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
-    const user = await USER_MODEL.findByPk(req.user.id);
+    const user = await USER_MODEL.findByPk(req.params.id);
 
     return res.status(200).json(user);
   }
 
-  static async getUsers(req: IRequest, res: IResponse) {
+  static async getUsers(role: string, req: IRequest, res: IResponse) {
     await USER_MODEL.sync();
 
     const users = await USER_MODEL.findAll();

@@ -4,15 +4,17 @@ import {
   CreationOptional,
   InferAttributes,
   InferCreationAttributes,
+  ForeignKey,
 } from 'sequelize';
 
 import { connection } from './connection';
+import { User } from './user.model';
 
 export interface ReqCar extends Model<InferAttributes<ReqCar>, InferCreationAttributes<ReqCar>> {
   id: CreationOptional<number>;
   car_number: string;
   date_end: Date;
-  date_req: Date;
+  date_req?: Date;
   date_start: Date;
   description: string;
   fio: string;
@@ -20,6 +22,7 @@ export interface ReqCar extends Model<InferAttributes<ReqCar>, InferCreationAttr
   passengers: string[];
   w_passengers: boolean;
   wo_wcreening: boolean;
+  userId?: ForeignKey<User['id']>;
 }
 
 export const REQ_CAR_MODEL = connection.define<ReqCar>('req_car', {

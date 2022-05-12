@@ -63,8 +63,16 @@ export const USER_MODEL = connection.define<User>(
   },
 );
 
-USER_MODEL.hasMany(REQ_PEOPLE_MODEL);
+USER_MODEL.hasMany(REQ_PEOPLE_MODEL, {
+  sourceKey: 'id',
+  foreignKey: 'userId',
+  as: 'req_people',
+});
 REQ_PEOPLE_MODEL.belongsTo(USER_MODEL);
 
-USER_MODEL.hasMany(REQ_CAR_MODEL);
+USER_MODEL.hasMany(REQ_CAR_MODEL, {
+  sourceKey: 'id',
+  foreignKey: 'userId',
+  as: 'req_car',
+});
 REQ_CAR_MODEL.belongsTo(USER_MODEL);

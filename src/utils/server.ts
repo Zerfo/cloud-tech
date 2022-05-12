@@ -10,8 +10,9 @@ export const httpServer = createServer(app);
 
 export const socket = new Server(httpServer);
 
-export const emitMessage = (roles: string[], type: string, data: object) => {
+export const emitMessage = (roles: string[], id: number | null, type: string, data: object) => {
   socket.emit(type, {
+    id,
     roles,
     data,
   });

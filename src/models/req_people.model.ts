@@ -4,19 +4,22 @@ import {
   CreationOptional,
   InferAttributes,
   InferCreationAttributes,
+  ForeignKey,
 } from 'sequelize';
 
 import { connection } from './connection';
+import { User } from './user.model';
 
 export interface ReqPeople
   extends Model<InferAttributes<ReqPeople>, InferCreationAttributes<ReqPeople>> {
   id: CreationOptional<number>;
   date_end: Date;
-  date_req: Date;
+  date_req?: Date;
   date_start: Date;
   description: string;
   fio: string;
   is_approved: boolean;
+  userId?: ForeignKey<User['id']>;
 }
 
 export const REQ_PEOPLE_MODEL = connection.define<ReqPeople>('req_people', {

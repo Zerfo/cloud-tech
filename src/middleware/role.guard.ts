@@ -1,24 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import JWT from 'jsonwebtoken';
 
-import { JWT_CONFIG } from '../configs';
+import { getUserRole } from '../utils';
 
 export const roleMiddleware =
-  (availableRole: string | string[]) => async (req: Request, res: Response, next: NextFunction) => {
-    let token = req.headers.authorization;
+  (availableRole: string[]) => async (req: Request, res: Response, next: NextFunction) => {
+    const token = req.headers.authorization;
 
     if (token && token.startsWith('Bearer ')) {
-      token = token.slice(7, token.length);
-    }
-
-    if (token) {
       try {
-        token = token.trim();
+        const role = getUserRole(token);
 
-        const { role } = (await JWT.verify(token, JWT_CONFIG.secret)) as { role: string };
-
-        if (role === availableRole) {
-          next();
+        if (availableRole?.some((r) => r === role)) {
+          next(role);
         }
 
         throw new Error('Access is denied');
