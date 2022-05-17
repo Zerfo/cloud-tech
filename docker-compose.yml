@@ -57,7 +57,7 @@ services:
           memory: 4G
 
   api:
-    image: cloud-tech-ts:latest
+    image: back/cloud-tech-ts:latest
     container_name: api
     build:
       context: .
